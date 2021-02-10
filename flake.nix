@@ -6,6 +6,10 @@
     stable.url = "github:nixos/nixpkgs/nixos-20.09";
 
     flake-utils.url = "github:numtide/flake-utils/master";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
 
     mach-nix = {
       url = "github:DavHau/mach-nix";
