@@ -12,7 +12,7 @@
   };
 
   outputs =
-    inputs@{ self, nixpkgs, flake-utils, ... }:
+    inputs@{ self, nixpkgs, mach-nix, flake-utils, ... }:
     let
       name = "Rameez Khan";
     in
