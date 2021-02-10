@@ -9,7 +9,7 @@
   outputs =
     inputs@{ self, nixpkgs, flake-utils, ... }:
     let
-      name = "Rameez Khan"
+      name = "Rameez Khan";
     in
       flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
