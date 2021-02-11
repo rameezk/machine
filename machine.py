@@ -100,6 +100,7 @@ def bootstrap(
     nixos: bool = False,
     darwin: bool = False,
     home_manager: bool = False,
+    show_trace: bool = typer.Argument(False, help="showing traces from nix commands", envvar="MACHINE_SHOW_TRACE")
 ):
     typer.secho("Bootstrapping an initial configuration", fg=COLORS.INFO.value)
     cfg = select(nixos=nixos, darwin=darwin, home_manager=home_manager)
@@ -110,7 +111,7 @@ def bootstrap(
     if cfg == PLATFORMS.DARWIN:
         disk_setup()
         flake = f".#{cfg.value}.{host}.config.system.build.toplevel {flags}"
-        run_cmd(f"nix build {flake}")
+        run_cmd(f'nix build {flake} --show-trace')
         # run_cmd("./result/activate-user && ./result/activate")
     else:
         typer.secho("Could not infer system type. Aborting.", fg=COLORS.ERROR.value)
