@@ -2,6 +2,13 @@
 > 🖥 Purely functional declarations of all my machines
 
 # Prerequisites
+## Get this repo
+Yeah, thanks Captain Obvious.
+
+```bash
+git clone https://github.com/rameezk/machine ~/.nixpkgs
+```
+
 ## Installing Nix package manager
 Run the script to perform a multi-user install on Darwin on any Linux. 
 ```bash
@@ -25,11 +32,6 @@ Reboot terminal when complete.
 
 # Bootstrapping System
 ## Darwin
-Clone repo with
-```bash
-git clone https://github.com/rameezk/machine ~/.nixpkgs
-```
-
 You can bootstrap a new nix-darwin system using
 ```bash
 nix develop -c ./machine.py bootstrap --darwin [host]
