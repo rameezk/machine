@@ -111,7 +111,8 @@ def bootstrap(
     if cfg == PLATFORMS.DARWIN:
         disk_setup()
         flake = f".#{cfg.value}.{host}.config.system.build.toplevel {flags}"
-        run_cmd(f'nix build {flake} --show-trace')
+        #run_cmd(f'nix build {flake} --show-trace')
+        run_cmd(f'nix build {flake}')
         # run_cmd("./result/activate-user && ./result/activate")
     else:
         typer.secho("Could not infer system type. Aborting.", fg=COLORS.ERROR.value)
