@@ -42,11 +42,10 @@
       };
     in {
       darwinConfigurations = mkDarwinConfig {
-        hostname = "randall";
-        extraModules = [ ./modules/profiles/personal.nix ];
+        hostname = "rameezk-macbook";
       };
-    }
-
+    } //
+    # dev shell
     flake-utils.lib.eachDefaultSystem (system:
     let pkgs = nixpkgs.legacyPackages.${system};
     in {
