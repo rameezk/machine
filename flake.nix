@@ -43,6 +43,7 @@
     in {
       darwinConfigurations = mkDarwinConfig {
         hostname = "rameezk-macbook";
+        extraModules = [ ./modules/profiles/personal.nix ];
       };
     } //
     # dev shell
