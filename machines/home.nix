@@ -59,13 +59,13 @@ in {
       pre-commit
       jq
       jdk11
-      kotlin
+      # kotlin
 
       # command line utilities
       git
       curl
       wget
-      ranger
+      # ranger
       rsync
       httpie
       pandoc
@@ -78,7 +78,7 @@ in {
 
       # typesetting
       # (texlive.combine { inherit (texlive) scheme-basic latexindent latexmk; })
-      texlive.combined.scheme-full
+      # texlive.combined.scheme-full
       # tectonic
     ];
   };
