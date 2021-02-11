@@ -10,6 +10,7 @@ Run the script to perform a multi-user install on Darwin on any Linux.
 Reboot terminal when complete.
 
 > **NOTE 1:** On MacOS, git will not be installed (but you will prompted to install developer tools).
+
 > **NOTE 2:** On MacOS, the above script may not succeed at first, you will need to reboot and run the script again in order for it to succeed.
 
 ## Installing Nix Flakes
