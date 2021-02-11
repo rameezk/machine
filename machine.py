@@ -91,7 +91,7 @@ def disk_setup():
     if not test_cmd("test -L /run"):
         typer.secho("linking /run directory", fg=COLORS.INFO.value)
         run_cmd("sudo ln -sfn private/var/run /run")
-    typer.secho("disk setup complete", fg=COLORS.SUCCESS.value)
+    typer.secho("Disk setup complete", fg=COLORS.SUCCESS.value)
 
 
 @app.command(help="builds an initial configuration", hidden=PLATFORM == PLATFORMS.NIXOS)
@@ -108,10 +108,9 @@ def bootstrap(
         raise typer.Exit(code=1)
 
     if cfg == PLATFORMS.DARWIN:
-        flake = f".#{host}"
         disk_setup()
         flake = f".#{cfg.value}.{host}.config.system.build.toplevel {flags}"
-        # run_cmd(f"nix build {flake} ")
+        run_cmd(f"nix build {flake}")
         # run_cmd("./result/activate-user && ./result/activate")
     else:
         typer.secho("Could not infer system type. Aborting.", fg=COLORS.ERROR.value)
