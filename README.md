@@ -27,5 +27,5 @@ git clone https://github.com/rameezk/machine ~/.nixpkgs
 
 You can bootstrap a new nix-darwin system using
 ```bash
-nix develop -c ./machine.py bootstrap && ./machine.py build --darwin [host] && ./result/activate-user && ./result/activate
+nix develop -c ./machine.py bootstrap && ./machine.py build --darwin [host]
 ```
