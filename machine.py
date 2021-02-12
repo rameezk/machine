@@ -179,12 +179,9 @@ def switch(
     else:
         typer.secho("Could not infer system type. aborting...", fg=COLORS.ERROR.value)
 
+
 @app.command(help="rollback system to a previous state")
-def rollback(
-    nixos: bool = False,
-    darwin: bool = False,
-    home_manager: bool = False,
-):
+def rollback(nixos: bool = False, darwin: bool = False, home_manager: bool = False):
     typer.secho("Rolling back configuration", fg=COLORS.INFO.value)
     cfg = select(nixos=nixos, darwin=darwin, home_manager=home_manager)
     if cfg is None:
@@ -208,9 +205,7 @@ def rollback(
 
 @app.command(help="list system generations")
 def list_generations(
-    nixos: bool = False,
-    darwin: bool = False,
-    home_manager: bool = False,
+    nixos: bool = False, darwin: bool = False, home_manager: bool = False
 ):
     typer.secho("Listing system generations", fg=COLORS.INFO.value)
     cfg = select(nixos=nixos, darwin=darwin, home_manager=home_manager)
