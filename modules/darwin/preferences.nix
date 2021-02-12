@@ -1,4 +1,10 @@
 { config, pkgs, ... }: {
+
+  system.keyboard = {
+    enableKeyMapping = true;
+    remapCapsLockToEscape = true;
+  };
+
   system.defaults = {
   #   # login window settings
   #   # loginwindow = {
