@@ -1,5 +1,5 @@
 { config, pkgs, ... }: {
-#   imports = [ ./vim ./zsh ./kitty ./dotfiles ./git.nix ];
+  #   imports = [ ./vim ./zsh ./kitty ./dotfiles ./git.nix ];
   imports = [ ./git.nix ];
 
   # install extra common packages
