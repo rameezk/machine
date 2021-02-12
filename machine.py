@@ -177,7 +177,35 @@ def switch(
         cmd = f"nix build {flake} {flags} && ./result/activate"
         run_cmd(cmd)
     else:
-        typer.secho("Could not infer system type. aborting...", fg=Colors.ERROR.value)
+        typer.secho("Could not infer system type. aborting...", fg=COLORS.ERROR.value)
+
+@app.command(help="rollback system to a previous state")
+def rollback(
+    nixos: bool = False,
+    darwin: bool = False,
+    home_manager: bool = False,
+):
+    typer.secho("Rolling back configuration", fg=COLORS.INFO.value)
+    cfg = select(nixos=nixos, darwin=darwin, home_manager=home_manager)
+    if cfg is None:
+        return
+
+    elif cfg == PLATFORMS.NIXOS:
+        cmd = f"sudo nixos-rebuild --rollback"
+        run_cmd(cmd)
+    elif cfg == PLATFORMS.DARWIN:
+        cmd = f"darwin-rebuild --rollback"
+        run_cmd(cmd)
+    elif cfg == PLATFORMS.HOME_MANAGER:
+        # flags = "-v --experimental-features 'flakes nix-command'"
+        # flake = f".#{cfg.value}.{host}.activationPackage"
+        # cmd = f"nix build {flake} {flags} && ./result/activate"
+        # run_cmd(cmd)
+        typer.secho("Dunno how this works yet.", fg=COLORS.ERROR.value)
+    else:
+        typer.secho("Could not infer system type. aborting...", fg=COLORS.ERROR.value)
+
+
 
 
 @app.command(help="format configuration files")
