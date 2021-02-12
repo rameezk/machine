@@ -55,11 +55,14 @@ def select(nixos: bool, darwin: bool, home_manager: bool):
     else:
         return PLATFORM
 
+
 def test_cmd(cmd: str):
     return os.system(f"{cmd} > /dev/null") == 0
 
+
 def fmt_command(cmd: str):
     return f"> {cmd}"
+
 
 def run_cmd(cmd: str):
     typer.secho(fmt_command(cmd), fg=COLORS.INFO.value)
@@ -69,7 +72,6 @@ def run_cmd(cmd: str):
 @app.command(help="set up disk for nix-darwin", hidden=PLATFORM != PLATFORMS.DARWIN)
 def disk_setup():
     typer.secho("Setting up disks for nix-darwin", fg=COLORS.INFO.value)
-
     if PLATFORM != PLATFORMS.DARWIN:
         typer.secho(
             "nix-darwin does not apply on this platform. aborting...",
@@ -100,7 +102,9 @@ def bootstrap(
     nixos: bool = False,
     darwin: bool = False,
     home_manager: bool = False,
-    show_trace: bool = typer.Argument(False, help="showing traces from nix commands", envvar="MACHINE_SHOW_TRACE")
+    show_trace: bool =typer.Argument(
+        False, help="showing traces from nix commands", envvar="MACHINE_SHOW_TRACE"
+    ),
 ):
     typer.secho("Bootstrapping an initial configuration", fg=COLORS.INFO.value)
     cfg = select(nixos=nixos, darwin=darwin, home_manager=home_manager)
@@ -111,11 +115,78 @@ def bootstrap(
     if cfg == PLATFORMS.DARWIN:
         disk_setup()
         flake = f".#{cfg.value}.{host}.config.system.build.toplevel {flags}"
-        #run_cmd(f'nix build {flake} --show-trace')
+        # run_cmd(f'nix build {flake} --show-trace')
         run_cmd(f'nix build {flake}')
         run_cmd("./result/activate-user && sudo ./result/activate")
     else:
         typer.secho("Could not infer system type. Aborting.", fg=COLORS.ERROR.value)
+
+
+@app.command(help="build configuration", no_args_is_help=True)
+def build(
+    host: str =typer.Argument(
+        default=..., help="the hostname of the configuration to build"
+    ),
+    nixos: bool = False,
+    darwin: bool = False,
+    home_manager: bool = False,
+):
+    cfg = select(nixos=nixos, darwin=darwin, home_manager=home_manager)
+    if cfg is None:
+        return
+
+    elif cfg == PLATFORMS.NIXOS:
+        flake = f".#{host}"
+        run_cmd(f"sudo nixos-rebuild build --flake {flake} --show-trace")
+    elif cfg == PLATFORMS.DARWIN:
+        flake = f".#{host}"
+        run_cmd(f"darwin-rebuild build --flake {flake} --show-trace")
+    elif cfg == PLATFORMS.HOME_MANAGER:
+        flags = "-v --experimental-features 'flakes nix-command'"
+        flake = f".#{PLATFORMS.HOME_MANAGER.value}.{host}.activationPackage"
+        run_cmd(f"nix build {flake} {flags}")
+    else:
+        typer.secho("Could not infer system type. aborting...", fg=Colors.ERROR.value)
+
+
+@app.command(help="build and activate any changes to the system", no_args_is_help=True)
+def switch(
+    host: str =typer.Argument(
+        default=..., help="the hostname of the configuration to build"
+    ),
+    nixos: bool = False,
+    darwin: bool = False,
+    home_manager: bool = False,
+):
+    typer.secho("Building and switching to new configuration", fg=COLORS.INFO.value)
+    cfg = select(nixos=nixos, darwin=darwin, home_manager=home_manager)
+    if cfg is None:
+        return
+
+    elif cfg == PLATFORMS.NIXOS:
+        flake = f".#{host}"
+        cmd = f"sudo nixos-rebuild switch --flake {flake} --show-trace"
+        run_cmd(cmd)
+    elif cfg == PLATFORMS.DARWIN:
+        flake = f".#{host}"
+        cmd = f"darwin-rebuild switch --flake {flake} --show-trace"
+        run_cmd(cmd)
+    elif cfg == PLATFORMS.HOME_MANAGER:
+        flags = "-v --experimental-features 'flakes nix-command'"
+        flake = f".#{cfg.value}.{host}.activationPackage"
+        cmd = f"nix build {flake} {flags} && ./result/activate"
+        run_cmd(cmd)
+    else:
+        typer.secho("Could not infer system type. aborting...", fg=Colors.ERROR.value)
+
+
+@app.command(help="format configuration files")
+def fmt():
+    typer.secho("Formatting configuration files", fg=COLORS.INFO.value)
+    cmd = f'black ./machine.py'
+    run_cmd(cmd)
+    cmd = "nixfmt **/*.nix"
+    run_cmd(cmd)
 
 
 if __name__ == "__main__":
